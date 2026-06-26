@@ -1,10 +1,12 @@
 const express = require('express')
 const cors    = require('cors')
 const helmet  = require('helmet')
+const cookieParser = require('cookie-parser')
 require('./config/db')
 
 const app = express()
 
+app.use(cookieParser())
 app.use(helmet())
 app.use(cors({
   origin: 'http://localhost:5173',
