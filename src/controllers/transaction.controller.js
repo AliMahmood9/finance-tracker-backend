@@ -6,8 +6,7 @@ const {
   getMonthlySummary,
 } = require("../models/transaction.model");
 
-
-const getAllTransactions = async (req, res) => {
+const getAllTransactions = async (req, res, next) => {
   try {
     const { type, month, year, category_id } = req.query;
     const filters = { type, month, year, category_id };
@@ -15,13 +14,11 @@ const getAllTransactions = async (req, res) => {
     const transactions = await getTransactions(req.user.id, filters);
     res.status(200).json({ transactions });
   } catch (err) {
-    console.error("Get transactions error:", err);
-    res.status(500).json({ message: "Server error" });
+    next(err);
   }
 };
 
-
-const addTransaction = async (req, res) => {
+const addTransaction = async (req, res, next) => {
   try {
     const { title, amount, type, date, notes, category_id } = req.body;
 
@@ -43,13 +40,11 @@ const addTransaction = async (req, res) => {
 
     res.status(201).json({ transaction });
   } catch (err) {
-    console.error("Add transaction error:", err);
-    res.status(500).json({ message: "Server error" });
+    next(err);
   }
 };
 
-
-const editTransaction = async (req, res) => {
+const editTransaction = async (req, res, next) => {
   try {
     const { id } = req.params;
     const { title, amount, type, date, notes, category_id } = req.body;
@@ -75,13 +70,11 @@ const editTransaction = async (req, res) => {
 
     res.status(200).json({ transaction });
   } catch (err) {
-    console.error("Edit transaction error:", err);
-    res.status(500).json({ message: "Server error" });
+    next(err);
   }
 };
 
-
-const removeTransaction = async (req, res) => {
+const removeTransaction = async (req, res, next) => {
   try {
     const { id } = req.params;
 
@@ -93,8 +86,7 @@ const removeTransaction = async (req, res) => {
 
     res.status(200).json({ message: "Transaction deleted successfully" });
   } catch (err) {
-    console.error("Delete transaction error:", err);
-    res.status(500).json({ message: "Server error" });
+    next(err);
   }
 };
 
@@ -108,8 +100,7 @@ const getSummary = async (req, res) => {
     const summary = await getMonthlySummary(req.user.id, month, year);
     res.status(200).json({ summary });
   } catch (err) {
-    console.error("Get summary error:", err);
-    res.status(500).json({ message: "Server error" });
+    next(err);
   }
 };
 

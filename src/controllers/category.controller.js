@@ -4,17 +4,16 @@ const {
   deleteCategory,
 } = require("../models/catgeory.model");
 
-const getAllCategories = async (req, res) => {
+const getAllCategories = async (req, res, next) => {
   try {
     const categories = await getCategories(req.user.id);
     res.status(200).json({ categories });
   } catch (err) {
-    console.error("Get categories error:", err);
-    res.status(500).json({ message: "Server error" });
+    next(err);
   }
 };
 
-const addCategory = async (req, res) => {
+const addCategory = async (req, res, next) => {
   try {
     const { name, type, icon } = req.body;
 
@@ -25,12 +24,11 @@ const addCategory = async (req, res) => {
     const category = await createCategory(name, type, icon, req.user.id);
     res.status(201).json({ category });
   } catch (err) {
-    console.error("Create category error:", err);
-    res.status(500).json({ message: "Server error" });
+    next(err);
   }
 };
 
-const removeCategory = async (req, res) => {
+const removeCategory = async (req, res, next) => {
   try {
     const { id } = req.params;
 
@@ -44,8 +42,7 @@ const removeCategory = async (req, res) => {
 
     res.status(200).json({ message: "Category deleted successfully" });
   } catch (err) {
-    console.error("Delete category error:", err);
-    res.status(500).json({ message: "Server error" });
+    next(err);
   }
 };
 

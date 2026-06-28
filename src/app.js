@@ -2,6 +2,7 @@ const express = require('express')
 const cors    = require('cors')
 const helmet  = require('helmet')
 const cookieParser = require('cookie-parser')
+const { globalLimiter, authLimiter } = require('./middlewares/rateLimit.middleware')
 require('./config/db')
 
 const app = express()
@@ -14,8 +15,10 @@ app.use(cors({
 }))
 app.use(express.json())
 
+// Global rate limit → all routes
+app.use(globalLimiter)
 
-app.use('/api/auth',require('./routes/auth.routes'))
+app.use('/api/auth', authLimiter,  require('./routes/auth.routes'))
 app.use('/api/categories', require('./routes/category.routes'))
 app.use('/api/transactions', require('./routes/transaction.routes'))
 app.use('/api/budgets',      require('./routes/budget.routes'))

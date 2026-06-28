@@ -11,8 +11,7 @@ const {
       const budgetList = await getBudgets(user_id, month, year)
       res.status(200).json({ budgetList })
     } catch (err) {
-      console.error('Get budgetList error:', err)
-      res.status(500).json({ message: 'Server error' })
+      next(err)
     }
   }
   
@@ -28,8 +27,7 @@ const {
       const budget = await createBudget(user_id, category_id, amount, month, year)
       res.status(201).json({ budget })
     } catch (err) {
-      console.error('Create budget error:', err)
-      res.status(500).json({ message: 'Server error' })
+      next(err)
     }
   }
   
@@ -47,8 +45,7 @@ const {
   
       res.status(200).json({ message: 'Budget deleted successfully' })
     } catch (err) {
-      console.error('Delete budget error:', err)
-      res.status(500).json({ message: 'Server error' })
+      next(err)
     }
   }
   

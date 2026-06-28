@@ -2,7 +2,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { createUser, findUserByEmail, findUserById } = require("../models/user.model");
 
-const register = async (req, res) => {
+const register = async (req, res, next) => {
   try {
     const { name, email, password } = req.body;
 
@@ -32,12 +32,11 @@ const register = async (req, res) => {
     const safeUser = await findUserById(user.id);
     res.status(200).json({ user: safeUser });
   } catch (err) {
-    console.error("Register error:", err);
-    res.status(500).json({ message: "Server error" });
+    next(err)
   }
 };
 
-const login = async (req, res) => {
+const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
@@ -67,8 +66,7 @@ const login = async (req, res) => {
     const safeUser = await findUserById(user.id);
     res.status(200).json({ user: safeUser });
   } catch (err) {
-    console.error("Login error:", err);
-    res.status(500).json({ message: "Server error" });
+    next(err)
   }
 };
 
@@ -81,4 +79,8 @@ const logout = async (req, res) => {
   res.status(200).json({ message: "Logged out successfully" });
 };
 
-module.exports = { register, login, logout };
+const getMe = async (req, res) => {
+   res.status(200).json({ user: req.user })
+}
+
+module.exports = { register, login, logout, getMe };
