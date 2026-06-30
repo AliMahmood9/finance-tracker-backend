@@ -1,6 +1,7 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { createUser, findUserByEmail, findUserById } = require("../models/user.model");
+const { setTokenCookie } = require("../utils/cookie.util");
 
 const register = async (req, res, next) => {
   try {
@@ -22,12 +23,7 @@ const register = async (req, res, next) => {
       { expiresIn: "7d" }
     );
 
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "none",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
+    setTokenCookie(res, token)
 
     const safeUser = await findUserById(user.id);
     res.status(200).json({ user: safeUser });
@@ -56,12 +52,7 @@ const login = async (req, res, next) => {
       { expiresIn: "7d" }
     );
 
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "none",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
+    setTokenCookie(res, token)
 
     const safeUser = await findUserById(user.id);
     res.status(200).json({ user: safeUser });
@@ -71,11 +62,7 @@ const login = async (req, res, next) => {
 };
 
 const logout = async (req, res) => {
-  res.clearCookie("token", {
-    httpOnly: true,
-    secure: true,
-    sameSite: "none",
-  });
+   clearTokenCookie(res)
   res.status(200).json({ message: "Logged out successfully" });
 };
 
