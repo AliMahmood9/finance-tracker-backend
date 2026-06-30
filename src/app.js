@@ -10,8 +10,12 @@ const app = express()
 app.use(cookieParser())
 app.use(helmet())
 app.use(cors({
-  origin: 'http://localhost:5173',
-  credentials: true
+    origin: [
+      'http://localhost:5173',
+      'http://finance-tracker-frontend-ali.s3-website-us-east-1.amazonaws.com',
+      'https://d2kw2dc4i1x4vh.cloudfront.net' // ← add this!
+    ],
+    credentials: true
 }))
 app.use(express.json())
 
